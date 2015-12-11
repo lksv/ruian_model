@@ -1,0 +1,3 @@
+[submodule "vendor/ruian2pgsql"]
+	path = vendor/ruian2pgsql
+	url = git@github.com:fordfrog/ruian2pgsql.git
