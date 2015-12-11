@@ -1,3 +1,11 @@
 language: ruby
 rvm:
   - 2.2.2
+
+addons:
+    postgresql: 9.3
+
+before_script:
+  - cp config/database.example.yml config/database.yml
+  - psql -c "CREATE DATABASE ruian;" -U postgres
+  - psql -q < db/schema.sql
