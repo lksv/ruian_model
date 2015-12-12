@@ -88,8 +88,36 @@ done
        inputdir --convert-to-ewkt --ignore-invalid-gml
 
      cd vendor/ruian2pgsql/target
-     java -cp ruian2pgsql-1.6.0-jar-with-dependencies.jar com.fordfrog.ruian2pgsql.App --db-connection-url 'jdbc:postgresql://localhost/ruian?user=ob&password=ob' --input-dir /vendor/RUIAN_DATA/ --convert-to-ewkt --ignore-invalid-gml --linearize-ewkt
+     java -cp ruian2pgsql-1.6.0-jar-with-dependencies.jar com.fordfrog.ruian2pgsql.App --db-connection-url 'jdbc:postgresql://localhost/ruian?user=ob&password=ob' --input-dir ../../RUIAN_DATA/ --convert-to-ewkt --ignore-invalid-gml --linearize-ewkt
 
+
+# Backup RUIAN db, create schema, misc
+
+You can create empty schema by:
+
+     java -cp ruian2pgsql-1.6.0-jar-with-dependencies.jar com.fordfrog.ruian2pgsql.App --db-connection-url 'jdbc:postgresql://localhost/ruian?user=ob&password=ob' --input-dir .  --convert-to-ewkt --ignore-invalid-gml --linearize-ewkt --truncate-all
+
+Dump whole ruian db:
+
+     pg_dump -d ruian -U ob -Fc > ruian_all.dump  # 3,2G
+
+Dump only some tables, to save space:
+
+     pg_dump -d ruian -U ob -t 'rn_*' -T 'rn_parcela' -T rn_stavebni_objekt -T rn_adresni_misto -T rn_zpusob_ochrany_pozemku -T rn_bonit_dily_parcel -T rn_zsj -Fc > ruian.dump
+
+Restore DB:
+
+     sudo -u postgres psql
+     create database "ruian";
+     create role ob with createdb login password 'ob';
+     GRANT ALL PRIVILEGES ON DATABASE ruian TO ob;
+     \c ruian
+     CREATE EXTENSION postgis;
+     CREATE EXTENSION postgis_topology;
+
+bash:
+
+     pg_restore -d ruian ruian.dump
 
 # How to use
 

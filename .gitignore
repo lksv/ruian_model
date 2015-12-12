@@ -8,3 +8,5 @@
 /pkg/
 /spec/reports/
 /tmp/
+vendor/ruian.dump
+vendor/ruian_all.dump
