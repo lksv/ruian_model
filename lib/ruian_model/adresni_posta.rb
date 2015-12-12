@@ -14,4 +14,5 @@
 # Ciselniky ISUI UI_ADRESNI_POSTA
 # see vendor/adresni_posta/ directory
 class AdresniPosta < ActiveRecord::Base
+  establish_connection :ruian_db
 end

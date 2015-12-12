@@ -1,5 +1,7 @@
-require "ruian_model/version"
 require 'yaml'
+
+require "ruian_model/version"
+require 'ruian_model/inflections'
 require 'active_record'
 
 module RuianModel

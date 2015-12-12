@@ -6,8 +6,6 @@ nemovitostí](http://www.cuzk.cz/ruian/RUIAN.aspx).
 
 See document [Struktura a popis výměnného formátu RÚIAN (VFR)](http://www.cuzk.cz/Uvod/Produkty-a-sluzby/RUIAN/2-Poskytovani-udaju-RUIAN-ISUI-VDP/Vymenny-format-RUIAN/Vymenny-format-RUIAN-%28VFR%29/Struktura-a-popis-VFR-1_6_0.aspx)
 
-
-
 This library defines basics (not all) models, e.g.:
 
 * Vusc (Vyšší územně samosprávný celek)
@@ -21,6 +19,11 @@ This library defines basics (not all) models, e.g.:
 * Parcela
 * StavebniObjekt
 * AdresniMisto
+
+In addition there is `AdresniPosta` class which represents list of all
+PSČ and their Post Names in ČR (see [how to load
+data](vendor/adresni_posta/README.md)).
+
 
 # Prerequirements
 

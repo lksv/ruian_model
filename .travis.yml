@@ -8,4 +8,7 @@ addons:
 before_script:
   - cp config/database.example.yml config/database.yml
   - psql -c "CREATE DATABASE ruian;" -U postgres
-  - psql -q < db/schema.sql
+  - psql -c "CREATE USER ob WITH PASSWORD 'ob';" -U postgres
+  - psql -c "ALTER DATABASE ruian OWNER TO ob;" -U postgres
+  - psql -q -d ruian < db/ruian_schema.sql
+  - psql -q -d ruian < db/adresni_posta_schema.sql
