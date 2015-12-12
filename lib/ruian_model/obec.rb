@@ -35,7 +35,10 @@ class Obec < ActiveRecord::Base
   establish_connection :ruian_db
   self.table_name = 'rn_obec'
   self.primary_key = 'kod'
-  belongs_to :okres, foreign_key: 'okres_kod', primary_key: 'kod'
+  belongs_to :okres,
+             foreign_key: 'okres_kod',
+             primary_key: 'kod',
+             inverse_of: :obce
   belongs_to :pou, foreign_key: 'pou_kod', primary_key: 'kod'
   has_many :casti_obci, foreign_key: 'obec_kod'
   has_many :katastralni_uzemi, foreign_key: 'obec_kod'

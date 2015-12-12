@@ -43,7 +43,9 @@ class StavebniObjekt < ActiveRecord::Base
   belongs_to :cast_obce, foreign_key: 'cobce_kod'
   belongs_to :parcela, foreign_key: 'identifikacni_parcela_id'
   belongs_to :momc, foreign_key: 'momc_kod'
-  has_many :adresni_mista, foreign_key: 'stavobj_kod'
+  has_many :adresni_mista,
+           foreign_key: 'stavobj_kod',
+           inverse_of: :stavebni_objekt
   #belongs_to :momc
 
   delegate :obec, to: :cast_obce

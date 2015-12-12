@@ -26,7 +26,9 @@ class AdresniMisto < ActiveRecord::Base
   establish_connection :ruian_db
   self.table_name = 'rn_adresni_misto'
   self.primary_key = 'kod'
-  belongs_to :stavebni_objekt, foreign_key: 'stavobj_kod'
+  belongs_to :stavebni_objekt,
+             foreign_key: 'stavobj_kod',
+             inverse_of: :adresni_mista
   belongs_to :ulice, foreign_key: 'ulice_kod'
 
   delegate :hranice, :definicni_bod, to: :stavebni_objekt

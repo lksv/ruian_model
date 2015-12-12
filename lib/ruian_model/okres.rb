@@ -24,8 +24,6 @@ class Okres < ActiveRecord::Base
   self.primary_key = 'kod'
   belongs_to :kraj, foreign_key: 'kraj_1960_kod', primary_key: 'kod'
   belongs_to :vusc, foreign_key: 'vusc_kod', primary_key: 'kod'
-  has_many :obce, foreign_key: 'okres_kod'
+  has_many :obce, foreign_key: 'okres_kod', inverse_of: :okres
   has_many :documents
 end
-
-

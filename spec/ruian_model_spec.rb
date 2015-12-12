@@ -6,8 +6,7 @@ describe RuianModel do
   end
 
   it '.setup configure DB and load models' do
-    expect(ActiveRecord::Base.configurations).to be_empty
-    expect(defined? Obec).to be_falsy
+    ActiveRecord::Base.configurations = {}
     RuianModel.setup
     expect(ActiveRecord::Base.configurations).not_to be_empty
     expect { defined? Obec.first }.to_not raise_error
