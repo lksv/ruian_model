@@ -24,6 +24,12 @@ In addition there is `AdresniPosta` class which represents list of all
 PSČ and their Post Names in ČR (see [how to load
 data](vendor/adresni_posta/README.md)).
 
+You can use rake tasks for manage `AdresniPosta`:
+
+     rake adresni_posta:create_schema
+     rake adresni_posta:download
+     rake adresni_posta:load
+
 
 # Prerequirements
 
