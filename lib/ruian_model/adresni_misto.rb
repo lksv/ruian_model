@@ -28,7 +28,6 @@ class AdresniMisto < ActiveRecord::Base
   self.primary_key = 'kod'
   belongs_to :stavebni_objekt, foreign_key: 'stavobj_kod'
   belongs_to :ulice, foreign_key: 'ulice_kod'
-  has_many :events, inverse_of: :adresni_misto, dependent: :destroy
 
   delegate :hranice, :definicni_bod, to: :stavebni_objekt
 end

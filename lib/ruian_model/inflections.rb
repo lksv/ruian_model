@@ -1,4 +1,4 @@
-require 'active_support/inflector/inflections'
+require 'active_support/inflector'
 
 ActiveSupport::Inflector.inflections(:en) do |inflect|
   inflect.uncountable %w( ulice momc katastralni_uzemi momc )
