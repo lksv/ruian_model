@@ -20,11 +20,27 @@
 #  deleted            :boolean          default(FALSE)
 #
 
-#File.open('public/parcela.json', 'w+') { |f| f.puts Parcela.all_geojson }
-#
+# Land Lot (using Czech name to correspond with RUIAN)
 class Parcela < ActiveRecord::Base
   establish_connection :ruian_db
   self.table_name = 'rn_parcela'
+
+  # See http://www.cuzk.cz/Katastr-nemovitosti/Poskytovani-udaju-z-KN/Ciselniky-ISKN/Ciselniky-k-nemovitosti.aspx#SC_D_POZEMKU
+  # http://www.cuzk.cz/Predpisy/Ostatni-dokumenty/Aktuality-WEB/Katastralni-vyhlasky/Priloha-KatV-k-podpisu-P-a-do-Sbirky-zakonu-%281%29.aspx
+  DRUH_POZEMKU = {
+    2 => ['orná půda', 'orná půda'],
+    3 => ['chmelnice', 'chmelnice'],
+    4 => ['vinice', 'vinice'],
+    5 => ['zahrada', 'zahrada'],
+    6 => ['ovocný sad', 'ovoc. sad'],
+    7 => ['trvalý travní porost', 'travní p.'],
+    8 => ['trvalý travní porost', 'travní p.'],
+    10 => ['lesní pozemek', 'lesní poz.'],
+    11 => ['vodní plocha', 'vodní pl.'],
+    13 => ['zastavěná plocha a nádvoří', 'zast. pl.'],
+    14 => ['ostatní plocha', 'ostat.pl.']
+  }
+  DRUH_POZEMKU_NAZVY = DRUH_POZEMKU.values.flatten
 
   belongs_to :katastralni_uzemi, foreign_key: 'katuz_kod'
   has_many :stavebni_objekty, foreign_key: 'identifikacni_parcela_id'
