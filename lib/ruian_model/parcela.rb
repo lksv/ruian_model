@@ -44,4 +44,13 @@ class Parcela < ActiveRecord::Base
 
   belongs_to :katastralni_uzemi, foreign_key: 'katuz_kod'
   has_many :stavebni_objekty, foreign_key: 'identifikacni_parcela_id'
+
+  def to_address
+    res = 'parc.č. '
+    res << "st. " if druh_cislovani_kod == 2
+    res << "#{kmenove_cislo}"
+    res << "/#{poddeleni_cisla}" if poddeleni_cisla
+    res << " (#{DRUH_POZEMKU[druh_pozemku_kod][1]})"
+    res
+  end
 end
