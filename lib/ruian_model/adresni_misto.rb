@@ -97,10 +97,13 @@ class AdresniMisto < ActiveRecord::Base
     cast_obce_nazev = cast_obce.try!(:nazev)
 
     if stavebni_objekt.obec.nazev == 'Praha'
+      p stavebni_objekt
       # 1. V praze
       [
         "#{ulice_nazev} #{cislo_domovni}/#{cislo_orientacni}",
-        stavebni_objekt.parcela.katastralni_uzemi.nazev,
+        # RUIAN data is not valid: StavebniObjekt.find(27562247).parcela == nil
+        # therefore #try!
+        stavebni_objekt.parcela.try!(:katastralni_uzemi).try!(:nazev),
         "#{adrp_psc} #{obec_nazev}" # TODO cislo mestskeho obvodu
       ]
     elsif ulice && cast_obce_nazev != obec_nazev
