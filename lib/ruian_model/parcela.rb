@@ -47,10 +47,15 @@ class Parcela < ActiveRecord::Base
 
   def to_address
     res = 'parc.č. '
-    res << "st. " if druh_cislovani_kod == 2
+    res << "st. " if druh_cislovani_kod == 1
     res << "#{kmenove_cislo}"
     res << "/#{poddeleni_cisla}" if poddeleni_cisla
     res << " (#{DRUH_POZEMKU[druh_pozemku_kod][1]})"
     res
+  end
+
+  def cuzk_url
+    # http://nahlizenidokn.cuzk.cz/MapaIdentifikace.aspx?l=KN?x=-742664?y=-1044239
+    "http://vdp.cuzk.cz/vdp/ruian/vlastnici?typ=pa&id=#{id}"
   end
 end

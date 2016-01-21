@@ -31,7 +31,7 @@ class AdresniMisto < ActiveRecord::Base
              inverse_of: :adresni_mista
   belongs_to :ulice, foreign_key: 'ulice_kod'
 
-  delegate :hranice, :definicni_bod, to: :stavebni_objekt
+  delegate :hranice, :definicni_bod, :cuzk_url, to: :stavebni_objekt
 
   scope :by_ku, ->(ku) {
     joins(stavebni_objekt: {parcela: :katastralni_uzemi})
@@ -72,5 +72,72 @@ class AdresniMisto < ActiveRecord::Base
     res
   }
 
+  # Converts AdresniMisto to human readable addres, defined by:
+  # [Vyhláška č. 359/2011 Sb., § 6](https://www.zakonyprolidi.cz/cs/2011-359)
+  # Do not forget include all necessary fields:
+  # AdresniMisto.includes(
+  #   ulice: :obec,
+  #   stavebni_objekt: [
+  #     momc: :obec,
+  #     cast_obce: :obec,
+  #     parcela: :katastralni_uzemi
+  #   ]
+  # )
+  def to_address
+    cislo_orientacni = cislo_orientacni_hodnota.to_s
+    cislo_orientacni << cislo_orientacni_pismeno.to_s if cislo_orientacni_pismeno
+
+    ulice_nazev = ulice.try!(:nazev)
+
+    obec = ulice.try!(:obec) || stavebni_objekt.obec
+
+    obec_nazev = obec.try(:nazev)
+
+    cast_obce = stavebni_objekt.cast_obce
+    cast_obce_nazev = cast_obce.try!(:nazev)
+
+    if stavebni_objekt.obec.nazev == 'Praha'
+      # 1. V praze
+      [
+        "#{ulice_nazev} #{cislo_domovni}/#{cislo_orientacni}",
+        stavebni_objekt.parcela.katastralni_uzemi.nazev,
+        "#{adrp_psc} #{obec_nazev}" # TODO cislo mestskeho obvodu
+      ]
+    elsif ulice && cast_obce_nazev != obec_nazev
+      # 2. V místě, kde se užívá uliční systém a název obce není shodný s názvem části obce
+      [
+        "#{ulice_nazev} #{cislo_domovni}/#{cislo_orientacni}",
+        cast_obce_nazev,
+        "#{adrp_psc} #{obec_nazev}"
+      ]
+    elsif ulice && cast_obce_nazev == obec_nazev
+      # 3. V místě, kde se užívá uliční systém a název obce je shodný s názvem části obce
+      [
+        "#{ulice_nazev} #{cislo_domovni}",
+        "#{adrp_psc} #{obec_nazev}"
+      ]
+    elsif !ulice && cast_obce_nazev != obec_nazev
+      # 4. V místě, kde se neužívá uliční systém a název obce a její části nejsou shodné
+      [
+        "#{cast_obce_nazev} #{cislo_domovni}",
+        "#{adrp_psc} #{obec_nazev}"
+      ]
+    elsif !ulice && cast_obce_nazev == obec_nazev
+      # 5. V místě, kde se neužívá uliční systém a název obce a její části jsou shodné
+      cislo_domovni_prefix = case stavebni_objekt.typ_kod
+        when 1 then 'č.p.'
+        when 2 then 'č.e.'
+        when 3 then 'bez č.p./č.e.'
+        else
+          fail "Cannot construct addres for AdresniMisto.id=#{id}: unknown typ_kod"
+        end
+      [
+        "#{cislo_domovni_prefix} #{cislo_domovni}",
+        "#{adrp_psc} #{obec_nazev}"
+      ]
+    else
+      fail "Cannot construct addres for AdresniMisto.id=#{id}"
+    end
+  end
 
 end

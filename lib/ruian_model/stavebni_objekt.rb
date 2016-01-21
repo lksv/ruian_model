@@ -48,5 +48,17 @@ class StavebniObjekt < ActiveRecord::Base
            inverse_of: :stavebni_objekt
   #belongs_to :momc
 
-  delegate :obec, to: :cast_obce
+  # cannot easily delegate to obec, is coulde be accesed by:
+  #  * cast_obce.obec
+  #  * momc.obec
+  #  * parcela.katastralni_uzemi.obec
+  def obec
+    cast_obce.try!(:obec) ||
+    momc.try!(:obec) ||
+    parcela.try!(:katastralni_uzemi).try!(:obec)
+  end
+
+  def cuzk_url
+    "http://vdp.cuzk.cz/vdp/ruian/vlastnici?typ=so&id=#{id}"
+  end
 end
