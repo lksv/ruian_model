@@ -31,7 +31,11 @@ class AdresniMisto < ActiveRecord::Base
              inverse_of: :adresni_mista
   belongs_to :ulice, foreign_key: 'ulice_kod'
 
-  delegate :hranice, :definicni_bod, :cuzk_url, to: :stavebni_objekt
+  delegate :hranice,
+           :definicni_bod,
+           :cuzk_url,
+           :katastralni_uzemi,
+           to: :stavebni_objekt
 
   scope :by_ku, ->(ku) {
     joins(stavebni_objekt: {parcela: :katastralni_uzemi})

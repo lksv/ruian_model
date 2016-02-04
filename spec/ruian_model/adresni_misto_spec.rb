@@ -32,6 +32,14 @@ describe AdresniMisto do
     end
   end
 
+  describe '#katastralni_uzemi' do
+    it 'delegates to stavebni_objekt' do
+      subject.stavebni_objekt = StavebniObjekt.new
+      expect(subject.stavebni_objekt).to receive(:katastralni_uzemi) { 'KU' }
+      expect(subject.katastralni_uzemi).to eq 'KU'
+    end
+  end
+
   describe '#to_address' do
     before do
       skip 'Ruian DB is not loaded.' if AdresniMisto.count < 100_000

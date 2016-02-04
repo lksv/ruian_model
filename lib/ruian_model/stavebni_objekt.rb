@@ -55,7 +55,11 @@ class StavebniObjekt < ActiveRecord::Base
   def obec
     cast_obce.try!(:obec) ||
     momc.try!(:obec) ||
-    parcela.try!(:katastralni_uzemi).try!(:obec)
+    katastralni_uzemi.try!(:obec)
+  end
+
+  def katastralni_uzemi
+    parcela.try!(:katastralni_uzemi)
   end
 
   def cuzk_url
