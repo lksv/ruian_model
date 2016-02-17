@@ -88,9 +88,6 @@ class AdresniMisto < ActiveRecord::Base
   #   ]
   # )
   def to_address
-    cislo_orientacni = cislo_orientacni_hodnota.to_s
-    cislo_orientacni << cislo_orientacni_pismeno.to_s if cislo_orientacni_pismeno
-
     ulice_nazev = ulice.try!(:nazev)
 
     obec = ulice.try!(:obec) || stavebni_objekt.obec
@@ -101,10 +98,9 @@ class AdresniMisto < ActiveRecord::Base
     cast_obce_nazev = cast_obce.try!(:nazev)
 
     if stavebni_objekt.obec.nazev == 'Praha'
-      p stavebni_objekt
       # 1. V praze
       [
-        "#{ulice_nazev} #{cislo_domovni}/#{cislo_orientacni}",
+        "#{ulice_nazev} #{house_number}",
         # RUIAN data is not valid: StavebniObjekt.find(27562247).parcela == nil
         # therefore #try!
         stavebni_objekt.parcela.try!(:katastralni_uzemi).try!(:nazev),
@@ -113,20 +109,20 @@ class AdresniMisto < ActiveRecord::Base
     elsif ulice && cast_obce_nazev != obec_nazev
       # 2. V místě, kde se užívá uliční systém a název obce není shodný s názvem části obce
       [
-        "#{ulice_nazev} #{cislo_domovni}/#{cislo_orientacni}",
+        "#{ulice_nazev} #{house_number}",
         cast_obce_nazev,
         "#{adrp_psc} #{obec_nazev}"
       ]
     elsif ulice && cast_obce_nazev == obec_nazev
       # 3. V místě, kde se užívá uliční systém a název obce je shodný s názvem části obce
       [
-        "#{ulice_nazev} #{cislo_domovni}",
+        "#{ulice_nazev} #{house_number}",
         "#{adrp_psc} #{obec_nazev}"
       ]
     elsif !ulice && cast_obce_nazev != obec_nazev
       # 4. V místě, kde se neužívá uliční systém a název obce a její části nejsou shodné
       [
-        "#{cast_obce_nazev} #{cislo_domovni}",
+        "#{cast_obce_nazev} #{house_number}",
         "#{adrp_psc} #{obec_nazev}"
       ]
     elsif !ulice && cast_obce_nazev == obec_nazev
@@ -145,6 +141,18 @@ class AdresniMisto < ActiveRecord::Base
     else
       fail "Cannot construct addres for AdresniMisto.id=#{id}"
     end
+  end
+
+  private
+
+  # Returns both cislo_domovni and cislo_orientacni if resents
+  def house_number
+    cislo_orientacni = cislo_orientacni_hodnota.to_s
+    cislo_orientacni << cislo_orientacni_pismeno.to_s if cislo_orientacni_pismeno
+
+    house_number = cislo_domovni.to_s.dup
+    house_number << '/' << cislo_orientacni if cislo_orientacni_hodnota
+    house_number
   end
 
 end

@@ -58,6 +58,12 @@ describe AdresniMisto do
           ['Lhenická 1120/1', 'České Budějovice 2', '37005 České Budějovice']
         )
       end
+
+      it 'shows correctly address withou `cislo_orientacni`' do
+        expect(AdresniMisto.find(22995196).to_address).to eq(
+          ['Fantova louka 588', 'Příbram II', '26101 Příbram']
+        )
+      end
     end
     context 'address "3. V místě, kde se užívá uliční systém a název obce je shodný s názvem části obce"' do
       it 'Žamberecká 339, 516 01 Vamberk' do
