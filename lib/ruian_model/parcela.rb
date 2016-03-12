@@ -47,10 +47,11 @@ class Parcela < ActiveRecord::Base
 
   def to_address
     res = 'parc.č. '
-    res << "st. " if druh_cislovani_kod == 1
-    res << "#{kmenove_cislo}"
+    res << 'st. ' if druh_cislovani_kod == 1
+    res << kmenove_cislo.to_s
     res << "/#{poddeleni_cisla}" if poddeleni_cisla
     res << " (#{DRUH_POZEMKU[druh_pozemku_kod][1]})"
+    res << ", k.u. #{katastralni_uzemi.nazev}"
     res
   end
 
